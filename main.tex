@@ -1,0 +1,206 @@
+\documentclass[withoutpreface]{cumcmthesis}
+\usepackage{url} % 支持网址链接，便于引用网络资源
+\usepackage{graphicx} % 插入和管理图片
+\usepackage{pdflscape} % 使页面横向显示，适合宽表格
+\usepackage{tabularx} % 支持自动调整宽度的表格
+\usepackage{afterpage} % 控制内容在下一页显示
+\usepackage{longtable} % 支持跨页长表格
+\usepackage{booktabs}
+\usepackage[numbers,sort&compress]{natbib} % 参考文献排序与压缩显示
+
+\usepackage[figuresright]{rotating} % 支持图表旋转
+
+
+\usepackage{amsmath} % 数学公式增强
+\usepackage{amssymb} % 更多数学符号
+\usepackage{geometry} % 页面边距自定义
+\usepackage{enumitem} % 列表样式自定义
+\usepackage{caption} % 图表标题样式自定义
+\usepackage{fancyhdr} % 页眉页脚自定义
+\usepackage{titlesec} % 章节标题样式自定义
+
+\usepackage{listings} % 插入和高亮显示代码
+\newfontfamily\codefont{DejaVu Sans Mono}
+% 设置代码样式
+\lstset{
+	numbers             =   left,               % 行号显示在左侧
+	showspaces          =   false,              % 不显示空格符号
+	numberstyle         =   \zihao{-5}\codefont,% 行号风格，小五号，等宽字体
+	showstringspaces    =   false,              % 不显示字符串中的空格
+	captionpos          =   t,                  % 标题位置在顶部
+	frame               =   lrtb,               % 显示四周边框
+	breaklines          =   true,               % 自动换行
+	columns             =   fixed,              % 固定列宽
+	basewidth           =   0.5em,              % 基础宽度
+	caption             =   \raggedright,       % 标题左对齐
+	literate            =   {ρ}{{$\rho$}}1
+	                        {σ}{{$\sigma$}}1
+	                        {δ}{{$\delta$}}1
+	                        {κ}{{$\kappa$}}1,    % 保证附录代码中的希腊字母可正确显示
+}
+
+% Python 代码样式
+\lstdefinestyle{Python}{
+	language        =   Python, % 语言设为Python
+	basicstyle      =   \zihao{-5}\codefont\color{black}, % 基本风格，小五号，等宽字体，黑色
+	keywordstyle    =   \color{blue}\bfseries\itshape, % 关键字风格，蓝色加粗斜体
+	stringstyle     =   \color{magenta}, % 字符串风格，洋红色
+	commentstyle    =   \color{red}\itshape, % 注释风格，红色斜体
+}
+
+% MATLAB 代码样式
+\lstdefinestyle{MATLAB}{
+	language        =   Matlab, % 语言设为MATLAB
+	basicstyle      =   \zihao{-5}\codefont\color{black}, % 基本风格，小五号，等宽字体，黑色
+	keywordstyle    =   \color{green}\bfseries\itshape, % 关键字风格，绿色加粗斜体
+	stringstyle     =   \color{purple}, % 字符串风格，紫色
+	commentstyle    =   \color{gray}\itshape, % 注释风格，绿色斜体
+}
+
+
+
+\usepackage{xcolor} % 颜色支持，代码和表格可用
+\usepackage{multicol} % 多栏排版
+
+\usepackage{booktabs} % 优美的表格线
+\usepackage{hyperref} % 支持PDF跳转、超链接
+\usepackage{subcaption} % 子图标题，多个图片并排显示
+\usepackage {float}  % 更灵活地控制浮动体（如表格、图片）位置
+\usepackage{array} % 增强表格功能
+\hypersetup{hidelinks,
+	colorlinks=true,
+	allcolors=black,
+	pdfstartview=Fit,
+	breaklinks=true
+}
+\usepackage{siunitx} % 科学计数法和单位格式化
+\usepackage{threeparttable}
+\usepackage{placeins}
+\usepackage{microtype}
+\geometry{left=2.4cm,right=2.4cm,top=2.35cm,bottom=2.35cm}
+\captionsetup{font=small,labelfont=bf}
+
+\title{锂离子电池快充寿命的建模预测与策略优化研究}
+\tihao{A}
+\baominghao{}
+%\schoolname{BIT}			%学校  
+%\yearinput{2025}			%年份  
+%\monthinput{09}			%月份
+%\dayinput{03}				%日期
+
+\begin{document}
+
+\pagenumbering{arabic}
+
+\maketitle
+\begin{center}
+    {\heiti\zihao{-4} 摘\quad 要}
+\end{center}
+
+
+\textbf{针对问题一},
+
+\textbf{针对问题二},
+
+\textbf{针对问题三},
+
+\textbf{针对问题四},
+
+\noindent\textbf{关键词：}
+
+
+\clearpage
+
+\section{问题重述}
+\subsection{问题背景}
+
+\subsection{问题重述}
+\textbf{问题1}
+
+\textbf{问题2}
+
+\textbf{问题3}
+
+\textbf{问题4}
+
+
+
+
+\section{问题分析}
+
+
+
+
+\section{模型假设}
+
+\section{主要符号说明}
+\begin{table}[H]
+\centering
+\caption{主要符号及含义}
+\label{tab:main_symbols}
+\small
+\setlength{\tabcolsep}{2pt}
+{ 
+\renewcommand{\arraystretch}{0.95} 
+\begin{tabularx}{\textwidth}{cXcX}
+\toprule
+符号 & 含义 & 符号 & 含义 \\
+\midrule
+
+
+\bottomrule
+\end{tabularx}
+}
+\end{table}
+\section{模型的建立与求解}
+
+\subsection{问题一}
+
+
+
+\subsection{问题二：快充参数与早期衰减的分层证据分析}
+
+
+\subsection{问题三：嵌套验证的短期SOH预测与多模型EOL外推}
+
+
+
+
+\subsection{问题四：基于前三问结论的风险感知双目标优化}
+
+
+
+\section{模型检验、误差与敏感性分析}
+
+
+\section{模型评价与推广}
+
+
+
+\section*{AI工具使用声明}
+本参赛队在竞赛过程中使用了AI工具，主要用于代码框架生成与调试、统计分析方案讨论、图表排版、论文结构检查及语言润色。AI未用于生成、补造或修改实验数据；所有程序均由参赛队在本地环境运行，核心数据口径、模型选择、公式、数值结果、图表和结论均经人工审查与复核。详细工具型号、使用环节、提示方式、采纳修改及核验情况见支撑材料《AI工具使用详情.pdf》。
+
+\addcontentsline{toc}{section}{参考文献}
+\begingroup
+\small
+\bibliographystyle{unsrt}
+\bibliography{book}
+\endgroup
+
+
+\clearpage
+\appendix
+\section{支撑材料文件列表}
+
+
+
+
+\section{程序复现说明}
+
+\clearpage
+\section{关键源程序代码（节选）}
+
+
+
+
+\end{document}
