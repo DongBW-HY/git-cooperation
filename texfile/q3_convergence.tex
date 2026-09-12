@@ -1,10 +1,20 @@
-\begin{table}[H]\centering\small
-\caption{问题3网格加密检验}\label{tab:q3_convergence}
-\begin{tabular}{cccc}
-\toprule
-径向区间数 & 临界时间/h & 相对1280区间的时差/s & 整分钟终止/h\\\midrule
-320 & 57.4789317 & +17.0454 & 57.4833\\
-640 & 57.4751205 & +3.3252 & 57.4833\\
-1280 & 57.4741969 & +0.0000 & 57.4833\\
-2560 & 57.4739680 & -0.8240 & 57.4833\\
-\bottomrule\end{tabular}\end{table}
+\begin{table}[H]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{0.82}
+
+    \caption{问题3网格加密检验}
+    \label{tab:q3_convergence}
+
+    \begin{tabular*}{0.80\textwidth}
+        {@{\extracolsep{\fill}}cccc@{}}
+        \toprule
+        径向区间数 & 临界时间/h & 相对1280区间的时差/s & 整分钟终止/h \\
+        \midrule
+        320  & 57.4789317 & +17.0454 & 57.4833 \\
+        640  & 57.4751205 & +3.3252  & 57.4833 \\
+        1280 & 57.4741969 & +0.0000  & 57.4833 \\
+        2560 & 57.4739680 & -0.8240  & 57.4833 \\
+        \bottomrule
+    \end{tabular*}
+\end{table}
