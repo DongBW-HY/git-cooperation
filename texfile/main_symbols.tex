@@ -1,0 +1,48 @@
+% 全文主要符号：仅保留符号、含义、单位三列；局部过程符号随文解释。
+\begingroup\small
+\renewcommand{\arraystretch}{1.12}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.8cm}>{\raggedright\arraybackslash}p{8.3cm}>{\raggedright\arraybackslash}p{3.1cm}}
+\caption{主要符号说明}\label{tab:main_symbols}\\
+\toprule 符号 & 含义 & 单位\\\midrule
+\endfirsthead
+\multicolumn{3}{c}{表\thetable\quad 主要符号说明（续）}\\
+\toprule 符号 & 含义 & 单位\\\midrule
+\endhead
+\midrule\multicolumn{3}{r}{续下页}\\\endfoot
+\bottomrule\endlastfoot
+$t$ & 自烘干开始计的时间 & s\\
+$r,z$ & 径向坐标、以中截面为原点的轴向坐标 & m\\
+$R,L,H$ & 药材半径、全长与半长，$H=L/2$ & m\\
+$R_0,R(t)$ & 问题4的初始半径与当前收缩半径 & m\\
+$\xi$ & 问题4随体径向坐标，$\xi=r/R(t)$ & ---\\
+$v_r$ & 径向材料运动速度 & m/s\\
+$\Theta$ & 问题4参考域中的摄氏温度场 & $^\circ$C\\
+$W$ & 问题4参考域中的干基含水率场 & kg/kg\\
+$\theta$ & 药材当地摄氏温度 & $^\circ$C\\
+$T_K$ & 药材当地绝对温度，$T_K=\theta+273.15$ & K\\
+$C$ & 药材干基含水率，即水质量与干物质质量之比 & kg/kg\\
+$\theta_1,\theta_2$ & 一维主模型与二维检验模型的温度场 & $^\circ$C\\
+$C_1,C_2$ & 一维主模型与二维检验模型的含水率场 & kg/kg\\
+$\theta_\infty$ & 烘房环境温度 & $^\circ$C\\
+$C_\infty$ & 烘房等效外界水分指标 & kg/kg\\
+$\widehat\theta_\infty$ & 由观测统计确定的环境温度平台值 & $^\circ$C\\
+$\widehat C_\infty$ & 由观测统计确定的环境水分平台值 & kg/kg\\
+$\rho$ & 药材有效密度 & kg/m$^3$\\
+$\rho_d$ & 当前单位体积的干物质质量；问题4随收缩变化 & kg/m$^3$\\
+$c_p$ & 药材有效比热容 & J/(kg$\cdot$K)\\
+$k$ & 药材有效导热系数 & W/(m$\cdot$K)\\
+$\alpha$ & 问题1的热扩散率，$\alpha=k/(\rho c_p)$ & m$^2$/s\\
+$a(C)$ & 变物性模型的有效体积热容，$a(C)=\rho(C)c_p(C)$ & J/(m$^3\cdot$K)\\
+$D$ & 药材有效水分扩散系数 & m$^2$/s\\
+$h$ & 对流换热系数 & W/(m$^2\cdot$K)\\
+$h_m$ & 与干基水分驱动力对应的有效传质系数 & m/s\\
+$\overline C_1,\overline C_2$ & 一维截面平均与二维全体积平均含水率 & kg/kg\\
+$N_r,N_z$ & 径向与半轴向的网格区间数 & ---\\
+$\tau^*$ & 观测边界切换为平台常数的选定时刻 & s\\
+$C_{\rm crit}$ & 干燥达标含水率阈值 & kg/kg\\
+$M_1,M_2$ & 一维、二维模型计算域内的最大含水率 & kg/kg\\
+$t_*$ & 最大含水率达到阈值的连续临界时间 & s\\
+$t_{60}$ & 每60 s检查时首次严格达标的整分钟终止时刻 & s\\
+\end{longtable}
+\endgroup
+\noindent\small 注：---表示无量纲。下标1、2表示模型维数，不表示问题编号；下标$s$表示材料表面、$0$表示初始状态，$\infty$表示环境，帽号表示平台估计值。表中时间和长度采用程序计算单位，结果表按题意换算为h、cm。\par\normalsize
