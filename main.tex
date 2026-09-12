@@ -929,21 +929,7 @@ $1.25\times10^{-4}$\~m。
 \input{texfile/q1_convergence}
 固定640区间，将相对容差收紧到$10^{-10}$、最大步长降到5~s，逐秒输出最大变化为温度\TimeTemp{}~$^\circ$C、含水率\TimeMoist{}~kg/kg。网格与时间检查分别度量不同数值设置的影响，不能作为严格的总误差上界相加使用。
 
-\subsubsection{总体平衡与独立热学基准}
-以下$u$代表温度$\theta$或含水率$C$。对每个状态$u$，令$\overline u_1=(2/R^2)\int_0^R u(r,t)r\,dr$，边界归一化外向通量为$f_\theta=2h(\theta_s-\theta_\infty)/(R\rho c_p)$或$f_C=2h_m(C_s-C_\infty)/R$，检查
-\[
-\varepsilon_u(t)=\frac{\overline u_1(t)-\overline u_1(0)+\int_0^t f_u(\tau)\,d\tau}{|\overline u_1(0)|}.
-\]
-其中$\varepsilon_u$为无量纲归一化平衡残差；$f_\theta,f_C$分别为按总体容量归一化的外向交换率，单位为$^\circ$C/s、kg/(kg$\cdot$s)，积分中的$\tau$只是时间积分变量。温度残差按初始数值尺度归一化，仅作数值平衡指标，不解释为以摄氏零点定义的物理能量比；水分对应固定干物质密度下的质量平衡。温度、水分最大绝对残差分别为\BalanceTemp{}和\BalanceMoist{}。通量积分采用逐秒记录的数值求积，因此残差包含时间采样积分误差。图\ref{fig:validation}用于直观检查径向加密趋势和全过程平衡，未添加没有实验依据的置信区间。
-\begin{figure}[H]\centering\includegraphics[width=\textwidth]{q1_validation.pdf}
-\caption{一维网格与总体平衡检验}\label{fig:validation}\end{figure}
-此外，独立采用径向线性热方程的Robin--Bessel展开。特征根满足$\mu_nJ_1(\mu_n)=\mathrm{Bi}_rJ_0(\mu_n)$，令
-\[
-A_n=\frac{2J_1(\mu_n)}{\mu_n[J_0(\mu_n)^2+J_1(\mu_n)^2]},\quad
-\theta_{\rm ref}=\theta_\infty(t)-\sum_{n=1}^{\infty}A_nJ_0\!\left(\frac{\mu_nr}{R}\right)
-\int_0^t\mathrm e^{-\alpha\mu_n^2(t-\tau)/R^2}\theta_\infty'(\tau)\,d\tau.
-\]
-其中$\mu_n$为第$n$个正特征根，$J_0,J_1$为第一类零阶、一阶Bessel函数，$A_n$为无量纲展开系数，$\mathrm{Bi}_r=hR/k$；$\theta_{\rm ref}$为参考温度解，$\theta_\infty\prime$表示环境温度对时间的导数。由于$\theta_\infty(0)=28$，上式满足本题初值。分段线性边界的卷积逐段解析积分，不调用有限体积或BDF。200项与400项结果最大差为\SpectralTrunc{}~$^\circ$C；400项与640区间主解在7个时刻、21个半径处的最大差为\SpectralError{}~$^\circ$C。该基准验证径向线性导热，水分方程的数值一致性由加密和质量平衡检查支持。全部75600个Excel数值重新读取后，与一维数组在$10^{-13}$绝对容差内一致。
+
 \section{问题二：动态参数下的全过程干燥模型}
 
 问题1建立了药材径向传热传质的基础模型。问题2在此基础上进一步考虑
