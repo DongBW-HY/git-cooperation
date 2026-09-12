@@ -411,30 +411,37 @@ C_1(R,t)>C_\infty(t),
 
 有限体积法直接对各控制体进行热量和水分守恒，能够自然保留圆柱坐标中的几何权重，并使相邻控制体共享面的通量相互抵消；BDF方法则用于处理细网格扩散离散后形成的刚性常微分方程组。由此得到问题1所需的温度与含水率时空序列。
 
-\subsubsection{空间离散与非线性水分通量}
+\subsubsection{有限体积空间离散}
+
+采用有限体积方法\citep{Guyer2009}对径向区域
+$0\le r\le R$进行空间离散。具体包括径向网格与控制体划分、
+温度方程离散以及非线性水分方程离散。
+
 \begin{enumerate}[label=(\arabic*)]
-\item {\textbf{径向节点与控制体划分}}
 
-采用有限体积方法\citep{Guyer2009}对$0\le r\le R$进行径向离散。在轴心$r=0$和真实侧面$r=R$均设置计算节点。
+\item {\textbf{径向网格与控制体}}
 
-由于预热初期热量和水分均从药材侧面进入或离开材料，表面附近的温度和含水率变化较快，径向梯度较大，因此在靠近真实侧面的区域采用较密网格。节点位置定义为
+考虑到预热初期药材侧面附近的温度和含水率梯度较大，
+采用向真实侧面加密的非均匀径向网格，并在轴心$r=0$
+与真实侧面$r=R$设置计算节点。节点位置定义为
 \[
 r_i
 =
 R\left[
 1-
-\frac{\sinh[4(1-i/N_r)]}{\sinh4}
+\frac{\sinh\!\left(4(1-i/N_r)\right)}{\sinh 4}
 \right],
 \qquad
-i=0,\ldots,N_r.
+i=0,\ldots,N_r,
 \]
-由该式有
+其中
 \[
-r_0=0,\qquad r_{N_r}=R,
+r_0=0,
+\qquad
+r_{N_r}=R.
 \]
-且节点间距沿径向向侧面逐渐减小。
 
-对于内部节点$r_i$，以相邻节点中点作为控制面：
+对于内部节点$r_i$，控制面取相邻节点的中点：
 \[
 r_{i-\frac12}
 =
@@ -444,76 +451,41 @@ r_{i+\frac12}
 =
 \frac{r_i+r_{i+1}}{2}.
 \]
-因此，第$i$个节点对应的单位轴向长度控制体为
-\[
-r_{i-\frac12}
-\le r\le
-r_{i+\frac12}.
-\]
 
-其体积为
+单位轴向长度下，第$i$个节点所对应的环形控制体体积为
 \[
 V_i
 =
 \pi
 \left(
-r_{i+\frac12}^2-r_{i-\frac12}^2
+r_{i+\frac12}^{\,2}
+-
+r_{i-\frac12}^{\,2}
 \right).
 \]
-为简化计算，令
+
+为简化后续有限体积离散公式，定义几何权重
 \[
 w_i
 =
 \frac{
-r_{i+\frac12}^2-r_{i-\frac12}^2
+r_{i+\frac12}^{\,2}
+-
+r_{i-\frac12}^{\,2}
 }{2},
 \]
-则有
+于是
 \[
 V_i=2\pi w_i.
 \]
-从上式得出，$w_i$可视为第$i$个控制体的几何权重。
+因此，$w_i$反映了第$i$个径向节点所代表控制体的几何大小。
 
-\item {内部节点的温度离散}
 
-对第$i$个内部控制体积分温度控制方程。根据上一章的热量守恒关系，
-\[
-\rho c_p(2\pi w_i)
-\frac{d\theta_i}{dt}
-=
-2\pi k
-\left[
-r_{i+\frac12}
-\left.
-\frac{\partial\theta}{\partial r}
-\right|_{i+\frac12}
--
-r_{i-\frac12}
-\left.
-\frac{\partial\theta}{\partial r}
-\right|_{i-\frac12}
-\right].
-\]
+% =========================================================
+\item {\textbf{温度方程离散}}
 
-控制面处的温度梯度由相邻节点差分近似：
-\[
-\left.
-\frac{\partial\theta}{\partial r}
-\right|_{i+\frac12}
-\approx
-\frac{\theta_{i+1}-\theta_i}
-{r_{i+1}-r_i},
-\]
-\[
-\left.
-\frac{\partial\theta}{\partial r}
-\right|_{i-\frac12}
-\approx
-\frac{\theta_i-\theta_{i-1}}
-{r_i-r_{i-1}}.
-\]
-
-代入并约去公共因子$2\pi$，得到
+对第$i$个内部控制体积分温度控制方程，
+并采用相邻节点差分近似控制面处的温度梯度，可得
 \[
 \frac{d\theta_i}{dt}
 =
@@ -527,9 +499,7 @@ r_{i-\frac12}
 \frac{\theta_i-\theta_{i-1}}
 {r_i-r_{i-1}}
 \right],
-\]
-其中
-\[
+\qquad
 \alpha=\frac{k}{\rho c_p}.
 \]
 
@@ -537,7 +507,7 @@ r_{i-\frac12}
 \[
 (\mathcal L_r u)_i
 =
-\frac1{w_i}
+\frac{1}{w_i}
 \left[
 r_{i+\frac12}
 \frac{u_{i+1}-u_i}
@@ -548,105 +518,12 @@ r_{i-\frac12}
 {r_i-r_{i-1}}
 \right].
 \]
-于是内部温度节点可简写为
-\[
-\dot{\theta}_i
-=
-\alpha(\mathcal L_r\theta)_i.
-\]
 
-该形式仍然体现有限体积法的守恒特征：相邻两个控制体在同一共享面上使用同一个通量，该通量对一个控制体为流出，对另一个控制体为流入，因此在总体求和时自动相消。
+对于轴心节点，由于$r=0$处控制面的面积为零，
+仅保留$r_{1/2}$处的通量，因此有限体积离散可自然满足中心对称条件。
+真实侧面则通过Robin边界条件引入与外界环境的换热。
 
-\item {轴心节点的处理}
-
-轴心$r=0$处不能直接使用含$1/r$的连续圆柱坐标表达式。有限体积法通过轴心控制体的几何结构自然避免这一问题。
-
-轴心节点$r_0=0$对应的控制体范围为
-\[
-0\le r\le r_{\frac12},
-\]
-其几何权重为
-\[
-w_0=\frac{r_{\frac12}^2}{2}.
-\]
-
-由于轴心内侧控制面的半径为零，其面积
-\[
-2\pi r\big|_{r=0}=0,
-\]
-因此不存在通过轴心的净径向热流，只需保留$r_{1/2}$处的外侧通量。于是
-\[
-\frac{d\theta_0}{dt}
-=
-\frac{\alpha}{w_0}
-r_{\frac12}
-\frac{\theta_1-\theta_0}
-{r_1-r_0}.
-\]
-
-这与上一章的轴心对称条件
-\[
-\partial_r\theta(0,t)=0
-\]
-一致，同时避免了数值计算中直接除以$r=0$。
-
-\item {真实侧面的温度离散}
-
-最外侧节点$r_{N_r}=R$对应的控制体为
-\[
-r_{N_r-\frac12}\le r\le R,
-\]
-其几何权重为
-\[
-w_{N_r}
-=
-\frac{
-R^2-r_{N_r-\frac12}^2
-}{2}.
-\]
-
-该控制体左侧与内部材料进行导热，右侧没有新的材料节点，而是通过Robin边界条件直接与外界环境交换热量。因此其能量平衡为
-\[
-\rho c_p(2\pi w_{N_r})
-\frac{d\theta_{N_r}}{dt}
-=
-2\pi k r_{N_r-\frac12}
-\frac{\theta_{N_r-1}-\theta_{N_r}}
-{r_{N_r}-r_{N_r-1}}
--
-2\pi R h
-(\theta_{N_r}-\theta_\infty).
-\]
-
-整理得到
-\[
-\frac{d\theta_{N_r}}{dt}
-=
-\alpha
-\frac{r_{N_r-\frac12}}{w_{N_r}}
-\frac{\theta_{N_r-1}-\theta_{N_r}}
-{r_{N_r}-r_{N_r-1}}
--
-\frac{h}{\rho c_p}
-\frac{R}{w_{N_r}}
-(\theta_{N_r}-\theta_\infty).
-\]
-
-其中第一项描述药材表面控制体与内部材料之间的导热，第二项描述真实侧面与外界环境之间的对流换热。
-
-例如预热阶段通常有
-\[
-\theta_{N_r}<\theta_\infty,
-\]
-此时
-\[
--\frac{h}{\rho c_p}
-\frac{R}{w_{N_r}}
-(\theta_{N_r}-\theta_\infty)>0,
-\]
-说明外界环境向表面控制体输入热量，与实际预热方向一致。
-
-为统一表示边界交换项，定义
+定义表面交换矩阵
 \[
 \mathcal B_r
 =
@@ -654,11 +531,9 @@ R^2-r_{N_r-\frac12}^2
 \left(
 0,\ldots,0,
 \frac{R}{w_{N_r}}
-\right).
+\right),
 \]
-矩阵中只有真实侧面节点对应位置非零，因此只有表面控制体直接与外界环境发生交换。
-
-于是整个温度半离散系统可写为
+则整个温度半离散系统可写为
 \[
 \dot{\boldsymbol\theta}_1
 =
@@ -666,22 +541,25 @@ R^2-r_{N_r-\frac12}^2
 -
 \frac{h}{\rho c_p}
 \mathcal B_r
-(\boldsymbol\theta_1-\theta_\infty\boldsymbol1).
+\left(
+\boldsymbol\theta_1
+-
+\theta_\infty\boldsymbol 1
+\right).
 \]
 
-\item {水分方程与Kirchhoff原函数}
 
-水分方程与温度方程具有相同的圆柱守恒结构，但其扩散系数
+% =========================================================
+\item {\textbf{非线性水分方程离散}}
+
+水分方程与温度方程具有相同的圆柱守恒结构，
+但扩散系数
 \[
 D(C)=D_0\exp(-b/C)
 \]
-随含水率变化，因此不能直接把$D$作为常数提出空间微分算子。
+随含水率$C$变化，因此不能作为常数提出空间微分算子。
 
-若直接在控制面处计算
-\[
-D(C)\frac{\partial C}{\partial r},
-\]
-还需要额外规定控制面处的含水率及扩散系数取值方式。为保持非线性扩散通量的一致表达，引入Kirchhoff原函数
+为处理该非线性扩散项，引入Kirchhoff原函数
 \[
 \Phi(C)
 =
@@ -703,14 +581,15 @@ b\operatorname{Ei}(-b/C)
 \Phi'(C)=D(C).
 \]
 
-因此由链式法则
+由链式法则，
 \[
-\frac{\partial\Phi(C)}{\partial r}
+D(C)\frac{\partial C}{\partial r}
 =
-D(C)\frac{\partial C}{\partial r}.
+\frac{\partial\Phi(C)}{\partial r}.
 \]
 
-于是，在控制面$r_{i+1/2}$处，
+因此，在控制面$r_{i+\frac12}$处，
+非线性扩散项可离散为
 \[
 D(C)\frac{\partial C}{\partial r}
 \bigg|_{i+\frac12}
@@ -722,71 +601,31 @@ r_{i+1}-r_i
 }.
 \]
 
-这样无需单独构造控制面上的$D(C_{i+1/2})$，即可直接由相邻节点状态计算非线性扩散通量。
+该处理无需另外构造控制面处的扩散系数
+$D(C_{i+\frac12})$，即可直接利用相邻节点的含水率
+计算控制面上的非线性扩散通量。
 
-对于内部节点，
-\[
-\frac{dC_i}{dt}
-=
-\frac1{w_i}
-\left[
-r_{i+\frac12}
-\frac{
-\Phi(C_{i+1})-\Phi(C_i)
-}{
-r_{i+1}-r_i
-}
--
-r_{i-\frac12}
-\frac{
-\Phi(C_i)-\Phi(C_{i-1})
-}{
-r_i-r_{i-1}
-}
-\right].
-\]
-
-对于轴心节点，
-\[
-\frac{dC_0}{dt}
-=
-\frac{r_{\frac12}}{w_0}
-\frac{
-\Phi(C_1)-\Phi(C_0)
-}{
-r_1-r_0
-}.
-\]
-
-对于真实侧面节点，内部扩散与表面水分交换共同作用：
-\[
-\frac{dC_{N_r}}{dt}
-=
--\frac{r_{N_r-\frac12}}{w_{N_r}}
-\frac{
-\Phi(C_{N_r})-\Phi(C_{N_r-1})
-}{
-r_{N_r}-r_{N_r-1}
-}
--
-h_m
-\frac{R}{w_{N_r}}
-(C_{N_r}-C_\infty).
-\]
-
-其中第一项表示水分在药材表层与内部之间的扩散，第二项表示药材真实侧面与外界环境之间的水分交换。
-
-因此整个水分半离散系统可以写为
+采用与温度方程相同的控制体几何结构，
+轴心处利用中心对称条件，
+真实侧面代入水分Robin边界条件，
+可得水分半离散系统
 \[
 \dot{\boldsymbol C}_1
 =
 \mathcal L_r\Phi(\boldsymbol C_1)
 -
 h_m\mathcal B_r
-(\boldsymbol C_1-C_\infty\boldsymbol1).
+\left(
+\boldsymbol C_1
+-
+C_\infty\boldsymbol 1
+\right).
 \]
 
-综上，经过有限体积空间离散后，原来的连续偏微分方程组转化为
+\end{enumerate}
+
+综上，经过有限体积空间离散后，
+问题1的温度和水分控制方程可统一写为
 \begin{equation}
 \left\{
 \begin{aligned}
@@ -796,19 +635,26 @@ h_m\mathcal B_r
 -
 \frac{h}{\rho c_p}
 \mathcal B_r
-(\boldsymbol\theta_1-\theta_\infty\boldsymbol1),
-\\
+\left(
+\boldsymbol\theta_1
+-
+\theta_\infty\boldsymbol 1
+\right),
+\\[1ex]
 \dot{\boldsymbol C}_1
 &=
 \mathcal L_r\Phi(\boldsymbol C_1)
 -
 h_m\mathcal B_r
-(\boldsymbol C_1-C_\infty\boldsymbol1).
+\left(
+\boldsymbol C_1
+-
+C_\infty\boldsymbol 1
+\right),
 \end{aligned}
 \right.
 \label{eq:ode1}
 \end{equation}
-
 其中
 \[
 \boldsymbol\theta_1
@@ -820,8 +666,11 @@ h_m\mathcal B_r
 [C_0,C_1,\ldots,C_{N_r}]^{\mathrm T}.
 \]
 
-至此，径向空间$r$已经被离散为有限个节点，而时间$t$仍保持连续，因此式\eqref{eq:ode1}是关于节点温度和含水率的常微分方程组，即半离散系统。
-\end{enumerate}
+至此，径向空间变量$r$已离散为有限个计算节点，
+而时间变量$t$仍保持连续，
+原偏微分方程组被转化为关于各节点温度和含水率的
+常微分方程组，即空间半离散系统。
+下一步采用BDF方法进行时间积分。
 \subsection{时间推进与参数设置}
 
 \subsubsection{BDF时间积分}
