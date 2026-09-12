@@ -10,7 +10,7 @@
 
 \usepackage[figuresright]{rotating} % 支持图表旋转
 
-
+\usepackage{needspace} % 控制内容在页面底部不被截断
 \usepackage{amsmath} % 数学公式增强
 \usepackage{amssymb} % 更多数学符号
 \usepackage{geometry} % 页面边距自定义
@@ -166,6 +166,72 @@
 \section{模型的建立与求解}
 
 \subsection{问题一：}
+\section{问题1的模型建立}\label{sec:q1model}
+依据上一章的模型假设，本章把药材预热过程表述为一维径向初边值问题：先确定空间范围与状态变量，再由热量、水分守恒建立控制方程，最后配置初值和边界条件。完整模型交由第\ref{sec:q1solve}章求解，其数值精度及一维简化的适用性统一在第\ref{sec:q1check}章检验。图\ref{fig:flow}给出这一论述顺序。
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{figures/q1_flowchart.pdf}
+\caption{问题1的建模论证逻辑}\label{fig:flow}
+\end{figure}
+\Needspace{7\baselineskip}
+\subsection{建模对象与径向抽象}
+题给药材半径$R=0.02$~m、全长$L=0.25$~m，半长$H=L/2=0.125$~m。取单位轴向长度的药材截面，径向范围为$0\le r\le R$，待求状态为温度$\theta_1(r,t)$与干基含水率$C_1(r,t)$。外界变化通过侧面对流换热和水分交换传入材料，内部状态随半径变化。因此，一维模型保留径向梯度，并不将药材视为整体均匀的集中参数系统。
+
+图\ref{fig:radial}左侧标出从轴心$O$到侧面$S$的径向测量线，右侧标出用于守恒分析的环形微元。此处忽略轴向输运与端面交换，以预测中截面附近的局部状态；这是一项待检验的近似，不能提前推广到整个圆柱。
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{figures/q1_radial_geometry.pdf}
+\caption{径向测量线与环形微元}\label{fig:radial}
+\end{figure}
+\subsection{温度控制方程}
+\textbf{微元储热变化}
+本问采用附录2给定的密度$\rho=820$~kg/m$^3$、比热容$c_p=2600$~J/(kg$\cdot$K)、热传导系数$k=0.36$~W/(m$\cdot$K)，药材摄氏温度变化$\mathrm{d}\theta_1 = \mathrm{d}(T-273.15) = \mathrm{d}T$。
+对于圆柱药材，取厚度$dr$的单位长度环形微元，其体积\(dV=\pi[(r+dr)^2-r^2]\)\(=\pi(2r\,dr+dr^2)\)\(=2\pi r\,dr\)
+温度变化 \(d\theta_1\) 引起的储热变化：
+\[
+dQ=dm\,c_p\,d\theta_1=\rho\,dV\,c_p\,d\theta_1
+=\rho c_p(2\pi r\,dr)\,d\theta_1
+\]
+所以单位时间内储热变化率为：
+\[
+\frac{dQ}{dt}=\rho c_p(2\pi r\,dr)\frac{\partial\theta_1}{\partial t}
+\]
+\textbf{内、外控制面的净热流入}
+
+本问采用附录2给定的$\rho=820$~kg/m$^3$、$c_p=2600$~J/(kg$\cdot$K)、$k=0.36$~W/(m$\cdot$K)。取半径$r$、厚度$dr$的单位长度环形微元，其体积为$2\pi r\,dr$。则微元储热变化为按显热平衡，微元储热变化等于内、外控制面的净热流入；再用傅里叶定律表示径向外向热流密度，得到
+\[
+\rho c_p(2\pi r\,dr)\partial_t\theta_1=-\partial_r(2\pi rq_r)\,dr,
+\qquad q_r=-k\partial_r\theta_1.
+\]
+其中$q_r$为沿径向向外取正的热流密度，单位为W/m$^2$；$dr$为径向微小厚度，$\partial_t$、$\partial_r$分别表示对时间、径向坐标的偏导。代入热流密度并约去公共因子，一维径向温度方程为
+\begin{equation}
+\frac{\partial\theta_1}{\partial t}=\alpha\frac1r\frac{\partial}{\partial r}
+\left(r\frac{\partial\theta_1}{\partial r}\right),\qquad
+\alpha=\frac{k}{\rho c_p}.\label{eq:heat1}
+\end{equation}
+式\eqref{eq:heat1}描述外层向内部的显热传导；其适用前提沿用假设章节，不额外引入相变或变物性机制。
+\subsection{水分控制方程}
+药材干基含水率定义为水分质量与干物质质量之比。在恒定干物质密度$\rho_d$下，单位体积水分质量为$\rho_d C_1$，径向外向水分通量采用有效Fick定律：
+\[
+J_r=-\rho_dD(C_1)\partial_rC_1,\qquad
+\rho_d(2\pi r\,dr)\partial_tC_1=-\partial_r(2\pi rJ_r)\,dr.
+\]
+其中$J_r$为沿径向向外取正的水分质量通量，单位为kg/(m$^2\cdot$s)。将通量代入水分守恒式并约去$\rho_d$，得到
+\begin{equation}
+\frac{\partial C_1}{\partial t}=\frac1r\frac{\partial}{\partial r}
+\left[rD(C_1)\frac{\partial C_1}{\partial r}\right],\qquad
+D(C_1)=D_0\exp(-b/C_1).\label{eq:moist1}
+\end{equation}
+式中$D_0=7\times10^{-9}$~m$^2$/s、$b=0.89$~kg/kg是本问扩散经验式的已知系数，使$b/C_1$无量纲。式\eqref{eq:moist1}保留局部含水率对扩散速率的影响。因为$D$不是常数，不能把它移到散度算子外；否则将遗漏扩散系数随空间状态变化的贡献。
+\subsection{初值、边界条件与模型闭合}
+题给初始状态在空间上均匀；轴心满足对称条件；真实侧面采用Robin交换条件。将这些条件汇总为
+\begin{equation}
+\left\{\begin{aligned}
+\theta_1(r,0)&=28,\qquad C_1(r,0)=2.55,\\
+\partial_r\theta_1(0,t)&=\partial_rC_1(0,t)=0,\\
+-k\partial_r\theta_1(R,t)&=h[\theta_1(R,t)-\theta_\infty(t)],\\
+-D(C_1)\partial_rC_1(R,t)&=h_m[C_1(R,t)-C_\infty(t)].
+\end{aligned}\right.\label{eq:boundary1}
+\end{equation}
+取$h=25$~W/(m$^2\cdot$K)、$h_m=8\times10^{-7}$~m/s。边界函数$\theta_\infty(t),C_\infty(t)$由附件1分段线性插值得到。外法向取径向向外：环境温度较高时，外向热通量为负，表示热量进入药材；材料表面含水率较高时，外向水分通量为正。Robin条件确定交换通量，不把环境状态直接赋给材料表面。
+
+至此，式\eqref{eq:heat1}、式\eqref{eq:moist1}与式\eqref{eq:boundary1}构成完整的一维模型。题给物性与环境记录是输入，$\theta_1,C_1$是输出；本问不包含待优化的工艺变量或待反演的物性参数。
 
 
 
