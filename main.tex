@@ -1260,41 +1260,56 @@ M_1(t_{60})<C_{\rm crit}.
 
 \section{问题4：收缩域热水耦合模型的建立}
 \subsection{半径观测与移动边界的描述}
-问题4同时改变物性和几何，不能只在问题3结果中缩短横坐标。本文从$\theta_0=28~{}^\circ$C、$C_0=2.55$~kg/kg重新积分，全程采用附录4；沿用问题2的分段环境、侧面交换系数及一维正式输出口径。附件2包含145个半径观测，时间为0至72 h、间隔0.5 h，半径从2.000 cm降至1.198 cm；未发现缺失、重复时间、非正半径或半径回增。早期较大半径属于真实收缩阶段，不能按全序列离群规则删除。
+问题4同时改变物性和几何，不能只在问题3结果中缩短横坐标。本文从$\theta_0=28~{}^\circ$C、$C_0=2.55$~kg/kg重新积分，全程采用附录4的经验公式；沿用问题2的分段环境、侧面交换系数及一维正式输出口径。附件2包含145个半径观测，时间为0至72 h、间隔0.5 h，半径从2.000 cm降至1.198 cm；未发现缺失、重复时间、非正半径或半径回增。早期较大半径属于真实收缩阶段，不能按全序列离群规则删除。
 
-以保形分段三次Hermite插值（PCHIP）构造$R(t)$，保留全部观测及单调性；程序将cm转换为m、h转换为s。主解在51.1 h结束，位于72 h观测范围内，无需半径外推。插值形式的影响另与分段线性插值比较。图\ref{fig:q4_radius}展示数据覆盖范围，以及材料点与固定测距的区别：材料点随表面一起向内运动，固定测距一旦超过当前半径，就不再属于药材。
+以保形分段三次Hermite插值（PCHIP）构造$R(t)$，保留全部观测及单调性；程序将cm转换为m、h转换为s。插值形式的影响另与分段线性插值比较。图\ref{fig:q4_radius}展示数据覆盖范围，以及材料点与固定测距的区别：材料点随表面一起向内运动，固定测距一旦超过当前半径，就不再属于药材。
 \begin{figure}[htbp]\centering\includegraphics[width=\textwidth]{figures/q4_radius.pdf}
 \caption{实测收缩与随体径向坐标}\label{fig:q4_radius}\end{figure}
 
-在长度$L=0.25$~m不变、径向自相似收缩的假设下，定义
+在长度$L=0.25$~m不变、径向自相似收缩的假设下，本文定义出归一化径向坐标，再对同一材料点的位置求导，推导出了径向速度公式：
 \[
 \xi=\frac{r}{R(t)}\in[0,1],\qquad r=R(t)\xi,\qquad
 v_r(r,t)=\frac{\dot R(t)}{R(t)}r,
 \]
-其中$\xi$为无量纲材料坐标，$v_r$为径向材料速度（m/s），$\dot R=dR/dt$为半径变化率。令$\Theta(\xi,t)=\theta(R(t)\xi,t)$、$W(\xi,t)=C(R(t)\xi,t)$，单位分别为$^\circ$C和kg/kg。链式法则给出
+其中$\xi$为无量纲材料坐标，$v_r$为径向材料速度（m/s），$\dot R=dR/dt$为半径变化率。之后建立温度场和含水率场在跟随材料观察的变化率。令$\Theta(\xi,t)=\theta(R(t)\xi,t)$、$W(\xi,t)=C(R(t)\xi,t)$，单位分别为$^\circ$C和kg/kg。链式法则给出时间变化率：
 \[
-\left.\partial_tW\right|_\xi=\left.\partial_tC\right|_r+v_r\partial_rC,
-\qquad \partial_rC=R^{-1}\partial_\xi W.
+\left.\frac{\partial W}{\partial t}\right|_\xi
+=
+\left.\frac{\partial C}{\partial t}\right|_r
++v_r\frac{\partial C}{\partial r}
+,
+\left.\frac{\partial\Theta}{\partial t}\right|_\xi
+=
+\left.\frac{\partial\theta}{\partial t}\right|_r
++v_r\frac{\partial\theta}{\partial r}
 \]
-因此随体时间导数已经包含材料运动；变换后不出现显式$\dot R\,\partial_\xi W$项，并非忽略收缩。
+空间变化率：
+\[
+\frac{\partial C}{\partial r}
+=\frac1{R(t)}\frac{\partial W}{\partial\xi}
+,
+\frac{\partial\theta}{\partial r}
+=\frac1{R(t)}\frac{\partial\Theta}{\partial\xi}
+\]
+换到跟随材料的参考坐标后，材料运动已经包含在随体时间导数中，因此不再另外写一次运动项，并且药材的实际尺寸和空间传递尺度仍由随时间变化的$R(t)$描述。
 
 \subsection{由干物质守恒到水分方程}
 记$\rho_d$为当前单位体积的干物质质量，$\boldsymbol v$为材料速度，$\boldsymbol J$为相对材料运动的水分质量通量（kg/(m$^2\!\cdot$s)）。干物质不流失及水分质量守恒分别为
 \[
 \partial_t\rho_d+\nabla\!\cdot(\rho_d\boldsymbol v)=0,\qquad
 \partial_t(\rho_d C)+\nabla\!\cdot(\rho_d C\boldsymbol v+\boldsymbol J)=0,
-\qquad \boldsymbol J=-\rho_dD\nabla C.
+\qquad \boldsymbol J=-\rho_dD\nabla C
 \]
-这里$\nabla\!\cdot$表示散度，$\nabla$表示空间梯度。两式相减得到
+这里$\nabla\!\cdot$表示散度，$\nabla$表示空间梯度。将水分守恒式－$C$乘以干物质守恒式，整理得：
 \[
 \rho_d(\partial_tC+\boldsymbol v\!\cdot\nabla C)
 =\nabla\!\cdot(\rho_dD\nabla C).
 \]
-自相似径向收缩保持初始均匀干物质密度的空间均匀性，故
+由于在初始干物质密度均匀、径向自相似收缩的假设下，各材料小体积按相同的半径比平方缩放，当前干物质密度仍在空间上均匀，故可得：
 \[
 \rho_d(t)=\rho_{d0}\left(\frac{R_0}{R(t)}\right)^2,
 \]
-其中$R_0=0.02$~m、$\rho_{d0}$为初始干物质密度。$\rho_d(t)$可从空间扩散算子中约去，但不能据此说它不随时间变化。$C$是水质量与干物质质量之比，纯几何压缩不会使其增加，因而不附加$-2\dot R C/R$项，也不将$C$乘以体积缩小倍数。
+其中$R_0=0.02$~m、$\rho_{d0}$为初始干物质密度。根据初始干物质密度处处均匀得假设，因而可将$\rho_d(t)$从空间扩散算子中约去。$C$是水质量与干物质质量之比，纯几何压缩不会使其改变，因而不附加$-2\dot R C/R$项，也不将$C$乘以体积缩小倍数。
 
 \subsection{附录4物性与最终控制方程}
 本问有效物性采用
@@ -1307,7 +1322,11 @@ D(C,T_K)&=4.2\times10^{-4}\exp\!\left(-\frac{0.30}{C}-\frac{3850}{T_K}\right),
 \]
 其中各经验式按题给单位代入，$\rho,c_p,k,D$依次以kg/m$^3$、J/(kg$\cdot$K)、W/(m$\cdot$K)、m$^2$/s计；$T_K=\Theta+273.15$~K是材料当地绝对温度。记$a(W)=\rho(W)c_p(W)$为有效体积热容。附录4的$\rho$用于储热闭合，不与质量守恒中的$\rho_d$混用。
 
-由有效显热方程$a(C)(\partial_t\theta+v_r\partial_r\theta)=\nabla\!\cdot(k\nabla\theta)$及上述水分守恒，在固定参考域得到
+由有效显热方程
+$a(C)(\partial_t\theta+v_r\partial_r\theta)=\nabla\!\cdot(k\nabla\theta)$
+及上述水分守恒公式
+$\boldsymbol J=-\rho_dD\nabla C$
+在固定参考域得到
 \begin{equation}\label{eq:q4_pde}
 \boxed{\begin{aligned}
 a(W)\frac{\partial\Theta}{\partial t}
